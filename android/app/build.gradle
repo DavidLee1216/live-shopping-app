@@ -52,3 +52,29 @@ android {
 flutter {
     source '../..'
 }
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.navigation:navigation-fragment:2.3.1'
+    implementation 'androidx.navigation:navigation-ui:2.3.1'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    /* Remote monster WebRTC library */
+    api 'com.remotemonster:sdk:2.7.0'
+
+
+//    implementation 'com.remotemonster:sdk:2.7.0'
+
+
+    implementation 'com.google.android.material:material:1.1.0'
+    testImplementation 'junit:junit:4.12'
+
+    /**
+     *  MultiDex Libarary
+     */
+    implementation 'androidx.multidex:multidex:2.0.1'
+}

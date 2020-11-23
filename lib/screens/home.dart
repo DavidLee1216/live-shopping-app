@@ -67,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return '${liveDateTime.year}년 ${liveDateTime.month}월 ${liveDateTime.day}일 ${liveDateTime.hour}시 ${liveDateTime.minute}분 방송시작';
   }
 
-  Future<List<dynamic>> _startStreaming(
-      BuildContext context, int liveId, int solutionId) async {
+
+  Future<List<dynamic>> _startStreaming(BuildContext context, int liveId, int solutionId) async {
     try {
       // TODO: solution id
       final response = await http.post(
@@ -98,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+
   Future<List<dynamic>> _fetchLiveNow() async {
     try {
       final response = await http.get(
@@ -125,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return null;
     }
   }
+
 
   Future<List<dynamic>> _fetchLiveList() async {
     try {
@@ -154,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+
   Future<SharedPreferences> _getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -170,6 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return prefs;
   }
+
 
   Future<void> _signOut() async {
     final confirmed = await showConfirmDialog(context);
