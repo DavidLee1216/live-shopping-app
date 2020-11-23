@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +43,23 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
+  }
+
+
+  static const platformMethodChannel = const MethodChannel('com.connectionsoft.liveapp/cast');
+
+  _nativeTest(BuildContext context, int liveId, String solutionId) async {
+    try {
+      final channelId = 'com.connectionsoft.liveapp/cast/test';
+      final result = await platformMethodChannel.invokeMethod(
+        'startStreaming',
+        {"channelId": channelId},
+      );
+      print(result);
+    } on PlatformException catch (e) {
+      // TODO: error
+      print(e);
+    }
   }
 
   String _dateToLocalString(String dateString) {
@@ -345,13 +363,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
+
+
+                                // onPressed: canStartStreaming
+                                //     ? () => _startStreaming(
+                                //   context,
+                                //   liveId,
+                                //   solutionId,
+                                // )
+                                //     : null,
+
                                 onPressed: canStartStreaming
-                                    ? () => _startStreaming(
+                                    ? () => _nativeTest(
                                   context,
                                   liveId,
                                   solutionId,
                                 )
                                     : null,
+
                                 child: Text(
                                   '방송 시작하기',
                                   style: TextStyle(
