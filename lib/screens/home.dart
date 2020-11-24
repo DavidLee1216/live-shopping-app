@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -76,7 +77,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<dynamic>> _startStreaming(
       BuildContext context, int liveId, String solutionId) async {
     try {
-      // TODO: solution id
+      final permissionGranted = await Permission.camera.request().isGranted &&
+          await Permission.microphone.request().isGranted &&
+          await Permission.storage.request().isGranted;
+
+      if (!permissionGranted) {
+        throw Exception('카메라, 마이크, 저장공간 권한을 허용해주세요.');
+      }
+
       final genearetedId = randomAlphaNumeric(10);
       final solutionId = 'com.connectionsoft.liveapp/${genearetedId}';
       final response = await http.post(
@@ -86,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('네트워크 오류');
+        throw Exception('리스트를 가져오지 못했습니다.');
       }
 
       final payload = json.decode(response.body)['payload'];
