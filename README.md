@@ -1,16 +1,26 @@
-# liveshopping
+# 라이브쇼핑 스트리밍 앱
 
-A LiveShopping App
+라이브쇼핑의 인플로엔서용 스트리밍 앱입니다.
 
-## Getting Started
+## TODO
 
-This project is a starting point for a Flutter application.
+- [x] 에러처리
+- [x] 토스트메세지
+- [ ] JWT [DIO](https://pub.dev/packages/dio) 처리
 
-A few resources to get you started if this is your first Flutter project:
+## 개발환경 설정
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Flutter 설치하기
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+OS 마다 설치방식이 다르기 때문에 Flutter 사이트에 들어가서 안내된 대로 따라한다.
+
+[사이트링크](https://flutter-ko.dev/docs/get-started/install)
+
+### 안드로이드 스튜디오로 시작하기
+
+1. 안드로이드 스튜디오에서 `Flutter` 플러그인을 설치한다.
+2. 이 프로젝트를 안드로이드 스튜디오로 오픈한다.
+3. 기기를 선택하고 실행한다.
+
+> 처음 실행시 시간이 오래 걸릴 수 있음
+> 만약 실행이 되지 않는다면 root 폴더에서 `flutter put get` 을 사용해서 패키지들을 다운받는다.
