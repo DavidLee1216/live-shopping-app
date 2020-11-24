@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:liveapp/config/constants.dart';
@@ -29,6 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _liveDate;
   bool canStartStreaming = false;
 
+  static const platformMethodChannel =
+      const MethodChannel('com.connectionsoft.liveapp/cast');
+
   void _startTimer() {
     if (_timer != null) {
       _timer.cancel();
@@ -45,36 +49,40 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
-  static const platformMethodChannel = const MethodChannel('com.connectionsoft.liveapp/cast');
-
-  _nativeTest(BuildContext context, int liveId, String solutionId) async {
-    try {
-      final channelId = 'com.connectionsoft.liveapp/cast/test';
-      final result = await platformMethodChannel.invokeMethod(
-        'startStreaming',
-        {"channelId": channelId},
-      );
-      print(result);
-    } on PlatformException catch (e) {
-      // TODO: error
-      print(e);
-    }
-  }
-
   String _dateToLocalString(String dateString) {
     final liveDateTime = DateTime.parse(dateString);
     return '${liveDateTime.year}년 ${liveDateTime.month}월 ${liveDateTime.day}일 ${liveDateTime.hour}시 ${liveDateTime.minute}분 방송시작';
   }
 
+  Future<void> _remoteCast(String channelId) async {
+    try {
+      await platformMethodChannel.invokeMethod(
+        'startStreaming',
+        {"channelId": channelId},
+      );
+    } on PlatformException catch (e) {
+      Fluttertoast.showToast(
+        msg: e.message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
 
-  Future<List<dynamic>> _startStreaming(BuildContext context, int liveId, int solutionId) async {
+  Future<List<dynamic>> _startStreaming(
+      BuildContext context, int liveId, String solutionId) async {
     try {
       // TODO: solution id
+      final genearetedId = randomAlphaNumeric(10);
+      final solutionId = 'com.connectionsoft.liveapp/${genearetedId}';
       final response = await http.post(
         '$apiHost/liveStart',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
-        body: {'liveId': liveId.toString(), 'solutionId': 1.toString()},
+        body: {'liveId': liveId.toString(), 'solutionId': solutionId},
       );
 
       if (response.statusCode != 200) {
@@ -82,6 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
       }
 
       final payload = json.decode(response.body)['payload'];
+
+      _remoteCast(solutionId);
 
       return payload;
     } catch (e) {
@@ -97,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return null;
     }
   }
-
 
   Future<List<dynamic>> _fetchLiveNow() async {
     try {
@@ -127,7 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   Future<List<dynamic>> _fetchLiveList() async {
     try {
       final response = await http.get(
@@ -156,7 +164,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   Future<SharedPreferences> _getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -173,7 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return prefs;
   }
-
 
   Future<void> _signOut() async {
     final confirmed = await showConfirmDialog(context);
@@ -367,24 +373,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
-
-
-                                // onPressed: canStartStreaming
-                                //     ? () => _startStreaming(
-                                //   context,
-                                //   liveId,
-                                //   solutionId,
-                                // )
-                                //     : null,
-
                                 onPressed: canStartStreaming
-                                    ? () => _nativeTest(
-                                  context,
-                                  liveId,
-                                  solutionId,
-                                )
+                                    ? () => _startStreaming(
+                                          context,
+                                          liveId,
+                                          solutionId,
+                                        )
                                     : null,
-
                                 child: Text(
                                   '방송 시작하기',
                                   style: TextStyle(

@@ -27,6 +27,7 @@ public class CastActivity extends AppCompatActivity {
     RemonCast caster;
     SurfaceViewRenderer castSurfaceView;
     Button castButton;
+    Button stopButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class CastActivity extends AppCompatActivity {
         channelName = getIntent().getExtras().getString("channelId");
 
         castButton = findViewById(R.id.castButton);
+        stopButton = findViewById(R.id.stopButton);
         castSurfaceView = findViewById(R.id.local_video_view);
 
         caster = RemonCast.builder()
@@ -44,10 +46,20 @@ public class CastActivity extends AppCompatActivity {
                 .serviceId(serviceKey)    // RemoteMonster 사이트에서 등록했던 당신의 id를 입력하세요.
                 .key(key)    // RemoteMonster로부터 받은 당신의 key를 입력하세요.
                 .build();
+
+        caster.showLocalVideo();
+
         castButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 caster.create(channelName);
+            }
+        });
+
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                caster.close();
             }
         });
 
