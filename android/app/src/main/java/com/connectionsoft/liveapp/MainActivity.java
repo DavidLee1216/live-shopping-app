@@ -1,4 +1,4 @@
-package com.connectionsoft.liveshopping;
+package com.connectionsoft.liveapp;
 
 import io.flutter.embedding.android.FlutterActivity;
 

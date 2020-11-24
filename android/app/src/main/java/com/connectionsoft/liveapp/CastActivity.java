@@ -1,4 +1,4 @@
-package com.connectionsoft.liveshopping;
+package com.connectionsoft.liveapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +27,7 @@ public class CastActivity extends AppCompatActivity {
     RemonCast caster;
     SurfaceViewRenderer castSurfaceView;
     Button castButton;
+    Button stopButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,27 +36,8 @@ public class CastActivity extends AppCompatActivity {
 
         channelName = getIntent().getExtras().getString("channelId");
 
-        button = findViewById(R.id.joinNow);
-        surfaceView = findViewById(R.id.remote_video_view);
-
-        viewer = RemonCast.builder()
-                .context(CastActivity.this)
-                .remoteView(surfaceView)        // 방송자의 Video Renderer
-                .serviceId(serviceKey)    // RemoteMonster 사이트에서 등록했던 당신의 id를 입력하세요.
-                .key(key)    // RemoteMonster로부터 받은 당신의 key를 입력하세요.
-                .build();
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewer.join(channelName);
-                Toast.makeText(CastActivity.this, channelName, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
         castButton = findViewById(R.id.castButton);
+        stopButton = findViewById(R.id.stopButton);
         castSurfaceView = findViewById(R.id.local_video_view);
 
         caster = RemonCast.builder()
@@ -64,10 +46,20 @@ public class CastActivity extends AppCompatActivity {
                 .serviceId(serviceKey)    // RemoteMonster 사이트에서 등록했던 당신의 id를 입력하세요.
                 .key(key)    // RemoteMonster로부터 받은 당신의 key를 입력하세요.
                 .build();
+
+        caster.showLocalVideo();
+
         castButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 caster.create(channelName);
+            }
+        });
+
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                caster.close();
             }
         });
 
