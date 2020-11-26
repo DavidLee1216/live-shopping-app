@@ -20,10 +20,12 @@
         tools:replace="label"
         android:name="io.flutter.app.FlutterApplication"
         android:label="라이브쇼핑"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".CastActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
