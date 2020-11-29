@@ -212,7 +212,22 @@ class _ChangePassScreenState extends State<ChangePassScreen> {
                 controller: _newPasswordInputController,
                 onChanged: (text) {
                   setState(() {
-                    _isNewPasswordValid = text.length > 3;
+                    var matchPoint = 0;
+                    if (text.contains(new RegExp(r'[A-Z]'))) {
+                      matchPoint += 1;
+                    }
+                    if (text.contains(new RegExp(r'[0-9]'))) {
+                      matchPoint += 1;
+                    }
+                    if (text.contains(new RegExp(r'[0-9]'))) {
+                      matchPoint += 1;
+                    }
+                    if (text.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                      matchPoint += 1;
+                    }
+                    final length = text.length >= 8 && text.length <= 12;
+                    final match = text == _confirmInputController.text;
+                    _isNewPasswordValid = length && match && matchPoint >= 3;
                   });
                 },
                 style: TextStyle(
@@ -248,8 +263,22 @@ class _ChangePassScreenState extends State<ChangePassScreen> {
                 controller: _confirmInputController,
                 onChanged: (text) {
                   setState(() {
-                    _isConfirmValid = text.length > 3 &&
-                        text == _newPasswordInputController.text;
+                    var matchPoint = 0;
+                    if (text.contains(new RegExp(r'[A-Z]'))) {
+                      matchPoint += 1;
+                    }
+                    if (text.contains(new RegExp(r'[0-9]'))) {
+                      matchPoint += 1;
+                    }
+                    if (text.contains(new RegExp(r'[0-9]'))) {
+                      matchPoint += 1;
+                    }
+                    if (text.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                      matchPoint += 1;
+                    }
+                    final length = text.length >= 8 && text.length <= 12;
+                    final match = text == _newPasswordInputController.text;
+                    _isConfirmValid = length && match && matchPoint >= 3;
                   });
                 },
                 style: TextStyle(
