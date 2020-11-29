@@ -106,7 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     SizedBox(height: 7),
                     Text(
-                      '쉽고 재밋는 방송 되시길 바라겠습니다.',
+                      '쉽고 재미있는 방송 되시길 바라겠습니다.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 10,

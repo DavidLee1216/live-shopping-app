@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const platformMethodChannel =
       const MethodChannel('com.connectionsoft.liveapp/cast');
+
+  Future<void> _handleRefresh() async {
+    setState(() {
+      _liveNow = _fetchLiveNow();
+      _liveList = _fetchLiveList();
+    });
+  }
 
   void _startTimer() {
     if (_timer != null) {
@@ -225,278 +233,289 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: kBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            // header
-            Container(
-              margin: const EdgeInsets.only(top: 10, bottom: 62),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    'assets/images/logo_dark.png',
-                    width: 60,
-                    height: 24,
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          _nickName,
-                          style: TextStyle(
-                            color: kPrimaryTextColor,
-                            fontSize: kH2FontSize,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          ' 님',
-                          style: TextStyle(
-                            color: kPrimaryTextColor,
-                            fontSize: kH2FontSize,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // live item header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.asset('assets/images/red_dot.png', width: 10, height: 10),
-                SizedBox(width: 5),
-                Text(
-                  'LIVE',
-                  style: TextStyle(
-                    color: kPrimaryButtonColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'GmarketSans',
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  '예정 상품',
-                  style: TextStyle(
-                    color: kPrimaryButtonColor,
-                    fontSize: kH1FontSize,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'NEXONLv2Gothic',
-                  ),
-                ),
-              ],
-            ),
-            // divider
-            Container(
-              height: 2,
-              margin: const EdgeInsets.only(top: 5.0, bottom: 10),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [kPrimaryTextColor, kPrimaryButtonColor],
-                ),
-              ),
-            ),
-            // streaming item
-            FutureBuilder<List<dynamic>>(
-              future: _liveNow,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (!snapshot.hasData) {
-                  return Center(
-                    child: Text('예정 방송이 없습니다.'),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
-                }
-
-                final liveItem = snapshot.data[0];
-                final liveId = liveItem['liveId'];
-                final solutionId = liveItem['solutionId'];
-                final imageUrl = liveItem['imgMainUrl'];
-                final title =
-                    liveItem['liveName'] + '\n' + liveItem['liveSlogan'];
-
-                final liveDateTime = DateTime.parse(liveItem['liveDate']);
-                final startTime =
-                    '${liveDateTime.year}년 ${liveDateTime.month}월 ${liveDateTime.day}일\n${liveDateTime.hour}시 ${liveDateTime.minute}분 방송시작';
-
-                _activeTime = liveItem['activeTime'];
-                _liveDate = liveDateTime;
-
-                return Row(
+        child: LiquidPullToRefresh(
+          height: 50,
+          color: Colors.transparent,
+          backgroundColor: kPrimaryButtonColor,
+          showChildOpacityTransition: false,
+          springAnimationDurationInMilliseconds: 300,
+          onRefresh: _handleRefresh,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              // header
+              Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 62),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // image
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.43,
-                      height: MediaQuery.of(context).size.width * 0.43,
-                      child: Image.network(imageUrl),
+                    Image.asset(
+                      'assets/images/logo_dark.png',
+                      width: 60,
+                      height: 24,
                     ),
-                    // description
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.43,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                      child: Row(
                         children: [
                           Text(
-                            startTime,
-                            style: TextStyle(
-                              color: kPrimaryButtonColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          Text(
-                            title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            _nickName,
                             style: TextStyle(
                               color: kPrimaryTextColor,
                               fontSize: kH2FontSize,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            height: 45,
-                            width: MediaQuery.of(context).size.width * 0.43,
-                            child: ButtonTheme(
-                              child: RaisedButton(
-                                color: kPrimaryButtonColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                onPressed: canStartStreaming
-                                    ? () => _startStreaming(
-                                          context,
-                                          liveId,
-                                          solutionId,
-                                        )
-                                    : null,
-                                child: Text(
-                                  '방송 시작하기',
-                                  style: TextStyle(
-                                    color: kButtonTextColor,
-                                    fontSize: kH2FontSize,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                          Text(
+                            ' 님',
+                            style: TextStyle(
+                              color: kPrimaryTextColor,
+                              fontSize: kH2FontSize,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ],
-                );
-              },
-            ),
-            Divider(thickness: 1, color: kPrimaryTextColor.withOpacity(0.5)),
-            SizedBox(height: 50),
-            // later header
-            Text(
-              '이후 방송 상품',
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: kPrimaryTextColor,
-                fontSize: kH1FontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'NEXONLv2Gothic',
+                ),
               ),
-            ),
-            Divider(thickness: 2, color: kPrimaryTextColor),
-            // later items
-            FutureBuilder<List<dynamic>>(
-              future: _liveList,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (!snapshot.hasData) {
-                  return Center(
-                    child: Text('준비된 방송이 없습니다.'),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
-                }
+              // live item header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Image.asset('assets/images/red_dot.png',
+                      width: 10, height: 10),
+                  SizedBox(width: 5),
+                  Text(
+                    'LIVE',
+                    style: TextStyle(
+                      color: kPrimaryButtonColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'GmarketSans',
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    '예정 상품',
+                    style: TextStyle(
+                      color: kPrimaryButtonColor,
+                      fontSize: kH1FontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NEXONLv2Gothic',
+                    ),
+                  ),
+                ],
+              ),
+              // divider
+              Container(
+                height: 2,
+                margin: const EdgeInsets.only(top: 5.0, bottom: 10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [kPrimaryTextColor, kPrimaryButtonColor],
+                  ),
+                ),
+              ),
+              // streaming item
+              FutureBuilder<List<dynamic>>(
+                future: _liveNow,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return Center(
+                      child: Text('예정 방송이 없습니다.'),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  }
 
-                final items = snapshot.data;
+                  final liveItem = snapshot.data[0];
+                  final liveId = liveItem['liveId'];
+                  final solutionId = liveItem['solutionId'];
+                  final imageUrl = liveItem['imgMainUrl'];
+                  final title =
+                      liveItem['liveName'] + '\n' + liveItem['liveSlogan'];
 
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) => Column(
+                  final liveDateTime = DateTime.parse(liveItem['liveDate']);
+                  final startTime =
+                      '${liveDateTime.year}년 ${liveDateTime.month}월 ${liveDateTime.day}일\n${liveDateTime.hour}시 ${liveDateTime.minute}분 방송시작';
+
+                  _activeTime = liveItem['activeTime'];
+                  _liveDate = liveDateTime;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 75,
-                            height: 75,
-                            margin: const EdgeInsets.only(right: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.0),
+                      // image
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.43,
+                        height: MediaQuery.of(context).size.width * 0.43,
+                        child: Image.network(imageUrl),
+                      ),
+                      // description
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.43,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              startTime,
+                              style: TextStyle(
+                                color: kPrimaryButtonColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            child: Image.network(items[index]['imgMainUrl']),
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  items[index]['liveName'] +
-                                      '\n' +
-                                      items[index]['liveSlogan'],
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: kPrimaryTextColor,
-                                    fontSize: kH4FontSize,
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                Text(
-                                  _dateToLocalString(items[index]['liveDate']),
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                    color: kPrimaryTextColor,
-                                    fontSize: kH3FontSize,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            SizedBox(height: 15),
+                            Text(
+                              title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: kPrimaryTextColor,
+                                fontSize: kH2FontSize,
+                              ),
                             ),
-                          ),
-                        ],
+                            Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              height: 45,
+                              width: MediaQuery.of(context).size.width * 0.43,
+                              child: ButtonTheme(
+                                child: RaisedButton(
+                                  color: kPrimaryButtonColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  onPressed: canStartStreaming
+                                      ? () => _startStreaming(
+                                            context,
+                                            liveId,
+                                            solutionId,
+                                          )
+                                      : null,
+                                  child: Text(
+                                    '방송 시작하기',
+                                    style: TextStyle(
+                                      color: kButtonTextColor,
+                                      fontSize: kH2FontSize,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      Divider(thickness: 1, color: kPrimaryTextColor),
                     ],
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+              Divider(thickness: 1, color: kPrimaryTextColor.withOpacity(0.5)),
+              SizedBox(height: 50),
+              // later header
+              Text(
+                '이후 방송 상품',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: kPrimaryTextColor,
+                  fontSize: kH1FontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NEXONLv2Gothic',
+                ),
+              ),
+              Divider(thickness: 2, color: kPrimaryTextColor),
+              // later items
+              FutureBuilder<List<dynamic>>(
+                future: _liveList,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return Center(
+                      child: Text('준비된 방송이 없습니다.'),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  }
+
+                  final items = snapshot.data;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) => Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 75,
+                              height: 75,
+                              margin: const EdgeInsets.only(right: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                              ),
+                              child: Image.network(items[index]['imgMainUrl']),
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    items[index]['liveName'] +
+                                        '\n' +
+                                        items[index]['liveSlogan'],
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: kPrimaryTextColor,
+                                      fontSize: kH4FontSize,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    _dateToLocalString(
+                                        items[index]['liveDate']),
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                      color: kPrimaryTextColor,
+                                      fontSize: kH3FontSize,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(thickness: 1, color: kPrimaryTextColor),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Container(

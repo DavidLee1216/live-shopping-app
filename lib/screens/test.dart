@@ -158,7 +158,10 @@ class _TestScreenState extends State<TestScreen> with WidgetsBindingObserver {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 200),
-                        child: Center(
+                        child: _videoPath != null ||
+                                _cameraController.value.isRecordingVideo
+                            ? null
+                            : Center(
                           child: Text(
                             '테스트 방송 시작하기',
                             style: TextStyle(
