@@ -41,17 +41,21 @@
             <TextView
                 android:id="@+id/onAir"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="top"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="50dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:text="On Air"
                 android:textAlignment="textStart"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="10dp"
                 tools:ignore="RtlCompat"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="5dp"
+                android:background="@drawable/red_round_corner"
+                />
 
             <TextView
                 android:id="@+id/timer"
@@ -109,13 +113,18 @@
                 android:textSize="24sp"
                 tools:ignore="RtlCompat" />
 
+
+
             <TextView
                 android:id="@+id/streamingText"
+
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="top"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="50dp"
                 android:text="대만과자 커피 누가 크래커 135gx3개/비스킷 수입과자 대만과자 커피 누가 크래커 135gx…"
                 android:textAlignment="center"
@@ -125,17 +134,42 @@
 
                 />
 
+
+            <TextView
+                android:id="@+id/liveWarningText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="top"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="50dp"
+                android:text="5분 남았습니다."
+                android:textAlignment="center"
+                android:textColor="#ff5570"
+                android:textFontWeight="700"
+                android:textSize="20sp"
+                tools:ignore="RtlCompat"
+                android:background="@drawable/warning_bg"
+
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                />
+
         </LinearLayout>
 
 
         <TextView
             android:id="@+id/startText"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="top"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="아래 버튼을 누르시면 라이브 방송이 시작됩니다. 시작을 원하신다면 버튼을 눌러주세요."
             android:textAlignment="center"
             android:textColor="#FFFFFF"
@@ -169,10 +203,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:text="방송 시작"
                 android:background="@drawable/button_bg_transparent"
-
                 />
 
             <Button

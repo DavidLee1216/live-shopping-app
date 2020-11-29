@@ -3,6 +3,8 @@ package com.connectionsoft.liveapp;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.remotemonster.sdk.RemonCast;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +51,7 @@ public class CastActivity extends AppCompatActivity {
     TextView txCloseScreen;
     TextView txOnAir;
     TextView txTimer;
+    TextView txLiveWarningText;
 
 
 
@@ -71,6 +75,7 @@ public class CastActivity extends AppCompatActivity {
         txCloseScreen = findViewById(R.id.closeScreen);
         txOnAir = findViewById(R.id.onAir);
         txTimer = findViewById(R.id.timer);
+        txLiveWarningText = findViewById(R.id.liveWarningText);
 
         // set
         castSurfaceView.setVisibility(View.GONE);
@@ -82,6 +87,9 @@ public class CastActivity extends AppCompatActivity {
         twStopText.setVisibility(View.GONE);
         txOnAir.setVisibility(View.GONE);
         txTimer.setVisibility(View.GONE);
+        txCloseScreen.setVisibility(View.VISIBLE);
+        txLiveWarningText.setVisibility(View.GONE);
+
 
 
         caster = RemonCast.builder()
@@ -107,6 +115,8 @@ public class CastActivity extends AppCompatActivity {
                 twStopText.setVisibility(View.VISIBLE);
                 txOnAir.setVisibility(View.VISIBLE);
                 txTimer.setVisibility(View.VISIBLE);
+                txCloseScreen.setVisibility(View.GONE);
+                txLiveWarningText.setVisibility(View.VISIBLE);
                 //
 
                 caster.create(channelName);
@@ -116,20 +126,57 @@ public class CastActivity extends AppCompatActivity {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // make ui changes accordingly
-                castSurfaceView.setVisibility(View.GONE);
-                imageView.setVisibility(View.VISIBLE);
-                castButton.setVisibility(View.VISIBLE);
-                stopButton.setVisibility(View.GONE);
-                twLiveShopping.setVisibility(View.VISIBLE);
-                twStreaming.setVisibility(View.GONE);
-                twStartText.setVisibility(View.VISIBLE);
-                twStopText.setVisibility(View.GONE);
-                txOnAir.setVisibility(View.GONE);
-                txTimer.setVisibility(View.GONE);
-                //
-                
-                caster.close();
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(CastActivity.this);
+                ViewGroup viewGroup = findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.customview, viewGroup, false);
+
+                Button button1 = (Button) dialogView.findViewById(R.id.buttonOk);
+                Button button2 = (Button) dialogView.findViewById(R.id.buttonNo);
+
+                builder.setView(dialogView);
+                AlertDialog alertDialog = builder.create();
+
+
+                button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        // make ui changes accordingly
+                        castSurfaceView.setVisibility(View.GONE);
+                        imageView.setVisibility(View.VISIBLE);
+                        castButton.setVisibility(View.VISIBLE);
+                        stopButton.setVisibility(View.GONE);
+                        twLiveShopping.setVisibility(View.VISIBLE);
+                        twStreaming.setVisibility(View.GONE);
+                        twStartText.setVisibility(View.VISIBLE);
+                        twStopText.setVisibility(View.GONE);
+                        txOnAir.setVisibility(View.GONE);
+                        txTimer.setVisibility(View.GONE);
+                        txCloseScreen.setVisibility(View.VISIBLE);
+                        txLiveWarningText.setVisibility(View.GONE);
+                        //
+
+                        caster.close();
+                        alertDialog.dismiss();
+
+                    }
+                });
+                button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // DO SOMETHINGS
+//                       dialogBuilder.dismiss();
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+
+                alertDialog.show();
+
+
             }
         });
 
@@ -141,9 +188,32 @@ public class CastActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(CastActivity.this);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.customview, viewGroup, false);
+
+                Button button1 = (Button) dialogView.findViewById(R.id.buttonOk);
+                Button button2 = (Button) dialogView.findViewById(R.id.buttonNo);
+
                 builder.setView(dialogView);
                 AlertDialog alertDialog = builder.create();
+
+
+                button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                });
+                button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // DO SOMETHINGS
+//                       dialogBuilder.dismiss();
+                        alertDialog.dismiss();
+                    }
+                });
+
                 alertDialog.show();
+
+
             }
         });
 
