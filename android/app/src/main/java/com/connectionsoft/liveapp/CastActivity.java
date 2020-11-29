@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
 import org.webrtc.SurfaceViewRenderer;
 
 import android.hardware.Camera;
@@ -39,8 +40,10 @@ public class CastActivity extends AppCompatActivity {
 
     RemonCast caster;
     SurfaceViewRenderer castSurfaceView;
-    Button castButton;
-    Button stopButton;
+//    Button castButton;
+    TextView castButton;
+//    Button stopButton;
+    TextView stopButton;
     ImageView imageView;
 
     TextView twLiveShopping;
