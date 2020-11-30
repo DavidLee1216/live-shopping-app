@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
       var channelId = '';
       if (_liveItem['solutionId'] == null) {
         final genearetedId = randomAlphaNumeric(10);
-        channelId = 'com.connectionsoft.liveapp/${genearetedId}';
+        channelId = 'com.connectionsoft.liveapp/$genearetedId';
       } else {
         channelId = _liveItem['solutionId'];
       }
@@ -215,7 +215,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (confirmed) {
       final prefs = await SharedPreferences.getInstance();
       prefs.clear();
-      Navigator.pushNamed(context, '/signin');
+      final dynamic user = await Navigator.pushNamed(context, '/signin');
+      setState(() {
+        _token = user['token'];
+        _nickName = user['nickName'];
+      });
+      _liveNow = _fetchLiveNow();
+      _liveList = _fetchLiveList();
     }
   }
 
