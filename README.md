@@ -7,6 +7,7 @@
 - [x] 에러처리
 - [x] 토스트메세지
 - [ ] JWT [DIO](https://pub.dev/packages/dio) 처리
+- [ ] State management
 
 ## 개발환경 설정
 
