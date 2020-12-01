@@ -86,7 +86,27 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  _remoteStop() {}
+  Future<void> _remoteStop(int liveId) async {
+    try {
+      await http.post(
+        '$apiHost/liveEnd',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
+        body: {
+          'liveId': liveId.toString(),
+        },
+      );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: '네트워크가 불안정합니다.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
 
   Future<List<dynamic>> _startStreaming(
       BuildContext context, dynamic liveItem) async {
