@@ -31,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _activeTime;
   DateTime _liveDate;
   bool canStartStreaming = false;
-  dynamic _liveItem;
 
   static const platformMethodChannel =
       const MethodChannel('com.connectionsoft.liveapp/cast');
@@ -64,24 +63,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return '${liveDateTime.year}년 ${liveDateTime.month}월 ${liveDateTime.day}일 ${liveDateTime.hour}시 ${liveDateTime.minute}분 방송시작';
   }
 
-  Future<void> _remoteCast() async {
+  Future<void> _remoteCast(dynamic liveItem) async {
     try {
-      final title = _liveItem['liveName'] + '\n' + _liveItem['liveSlogan'];
-      final liveDateTime = _liveItem['liveDate'];
-      var channelId = '';
-      if (_liveItem['solutionId'] == null) {
-        final genearetedId = randomAlphaNumeric(10);
-        channelId = 'com.connectionsoft.liveapp/$genearetedId';
-      } else {
-        channelId = _liveItem['solutionId'];
-      }
-
       await platformMethodChannel.invokeMethod(
         'startStreaming',
         {
-          "channelId": channelId,
-          "title": title,
-          "liveDateTime": liveDateTime,
+          "channelId": liveItem['solutionId'],
+          "title": liveItem['liveName'] + '\n' + liveItem['liveSlogan'],
+          "liveDateTime": liveItem['liveDate'],
         },
       );
     } on PlatformException catch (e) {
@@ -97,8 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  _remoteStop() {}
+
   Future<List<dynamic>> _startStreaming(
-      BuildContext context, int liveId, String solutionId) async {
+      BuildContext context, dynamic liveItem) async {
     try {
       final permissionGranted = await Permission.camera.request().isGranted &&
           await Permission.microphone.request().isGranted &&
@@ -108,10 +99,18 @@ class _HomeScreenState extends State<HomeScreen> {
         throw Exception('카메라, 마이크, 저장공간 권한을 허용해주세요.');
       }
 
+      if (liveItem['solutionId'].isEmpty) {
+        final genearetedId = randomAlphaNumeric(10);
+        liveItem['solutionId'] = 'com.connectionsoft.liveapp/$genearetedId';
+      }
+
       final response = await http.post(
         '$apiHost/liveStart',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
-        body: {'liveId': liveId.toString(), 'solutionId': solutionId},
+        body: {
+          'liveId': liveItem['liveId'].toString(),
+          'solutionId': liveItem['solutionId']
+        },
       );
 
       if (response.statusCode != 200) {
@@ -120,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final payload = json.decode(response.body)['payload'];
 
-      _remoteCast();
+      _remoteCast(liveItem);
 
       return payload;
     } catch (e) {
@@ -359,8 +358,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   final liveItem = snapshot.data[0];
-                  final liveId = liveItem['liveId'];
-                  final solutionId = liveItem['solutionId'];
                   final imageUrl = liveItem['imgMainUrl'];
                   final title =
                       liveItem['liveName'] + '\n' + liveItem['liveSlogan'];
@@ -371,8 +368,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   _activeTime = liveItem['activeTime'];
                   _liveDate = liveDateTime;
-
-                  _liveItem = liveItem;
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -421,8 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onPressed: canStartStreaming
                                       ? () => _startStreaming(
                                             context,
-                                            liveId,
-                                            solutionId,
+                                            liveItem,
                                           )
                                       : null,
                                   child: Text(
