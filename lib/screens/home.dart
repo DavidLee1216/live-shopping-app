@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _activeTime;
   DateTime _liveDate;
   bool canStartStreaming = false;
+  int _curLiveId;
 
   static const platformMethodChannel =
       const MethodChannel('com.connectionsoft.liveapp/cast');
@@ -86,13 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _remoteStop(int liveId) async {
+  Future<void> _remoteStop() async {
     try {
       await http.post(
         '$apiHost/liveEnd',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
         body: {
-          'liveId': liveId.toString(),
+          'liveId': _curLiveId.toString(),
         },
       );
     } catch (e) {
@@ -139,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final payload = json.decode(response.body)['payload'];
 
+      _curLiveId = liveItem['liveId'];
       _remoteCast(liveItem);
 
       return payload;
