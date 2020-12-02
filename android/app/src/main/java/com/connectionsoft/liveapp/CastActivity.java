@@ -3,19 +3,18 @@ package com.connectionsoft.liveapp;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import io.flutter.embedding.android.FlutterActivity;
-import io.flutter.view.FlutterView;
-import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.plugin.common.EventChannel;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugins.GeneratedPluginRegistrant;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.remotemonster.sdk.RemonCast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.common.Priority;
+import org.json.JSONObject;
+import com.androidnetworking.error.ANError;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,14 +35,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import android.util.Log;
 import android.os.CountDownTimer;
-public class CastActivity extends FlutterActivity {
+
+public class CastActivity extends AppCompatActivity {
 
     //    private RemonCast castViewer = null;
     String channelName ="";
     String title = "";
     int liveTime = 0;
     long startTime = 0;
+    String token = "";
+    String liveId = "";
     String collapsedTime = "00:00:00";
+    boolean isCast = false;
 
     String serviceKey = "61a7c25f-6cd8-4e80-80f0-4dd23332c3a0";
     String key = "5ad3703f3582d137dabbde3d8808700280196e50de6c911835d1021d2a1c78a4";
@@ -54,6 +57,8 @@ public class CastActivity extends FlutterActivity {
 
     RemonCast caster;
     SurfaceViewRenderer castSurfaceView;
+
+    ImageView liveBackground;
     ImageView playIcon;
     TextView castButton;
     Button returnButton;
@@ -62,19 +67,18 @@ public class CastActivity extends FlutterActivity {
     ImageView changeCameraView1;
     ImageView changeCameraView2;
 
-    ImageView imageView;
+    ImageView LiveLogoView;
 
     TextView twLiveShopping;
     TextView twStreaming;
     TextView twStartText;
     TextView twStopText;
 
-    TextView txCloseScreen;
+    ImageView txCloseScreen;
     TextView txOnAir;
     TextView txTimer;
 //    TextView txLiveWarningText;
 
-    private FlutterView flutterView;
 
 
     @Override
@@ -82,20 +86,26 @@ public class CastActivity extends FlutterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cast);
 
+        AndroidNetworking.initialize(getApplicationContext());
+
         channelName = getIntent().getExtras().getString("channelId");
         title = getIntent().getExtras().getString("title");
         startTime = getIntent().getExtras().getLong("startTime");
+        token = getIntent().getExtras().getString("token");
+        liveId = getIntent().getExtras().getString("liveId");
 
-        playIcon = findViewById(R.id.play_button);
+        playIcon = findViewById(R.id.play_icon);
         castButton = findViewById(R.id.castButton);
         changeCameraView1 = findViewById(R.id.cameraChangeButton1);
-        stopIcon = findViewById(R.id.stop_button);
+        stopIcon = findViewById(R.id.stop_icon);
         stopButton = findViewById(R.id.stopButton);
         returnButton = findViewById(R.id.returnButton);
         changeCameraView2 = findViewById(R.id.cameraChangeButton2);
 
         castSurfaceView = findViewById(R.id.local_video_view);
-        imageView = findViewById(R.id.imageView);
+//        castRemoteView = findViewById(R.id.remote_video_view);
+        liveBackground = findViewById(R.id.live_background);
+        LiveLogoView = findViewById(R.id.LiveLogoView);
 
         twLiveShopping = findViewById(R.id.liveShopping);
         twStreaming = findViewById(R.id.streamingText);
@@ -107,17 +117,16 @@ public class CastActivity extends FlutterActivity {
         txOnAir = findViewById(R.id.onAir);
         txTimer = findViewById(R.id.timer);
 
-//        txLiveWarningText = findViewById(R.id.liveWarningText);
-
-        // set
         castSurfaceView.setVisibility(View.VISIBLE);
-        imageView.setVisibility(View.VISIBLE);
+        liveBackground.setVisibility(View.VISIBLE);
+        LiveLogoView.setVisibility(View.VISIBLE);
         setPlayButtonsVisibility(1);
         twLiveShopping.setVisibility(View.VISIBLE);
         twStreaming.setVisibility(View.GONE);
         twStartText.setVisibility(View.VISIBLE);
         twStopText.setVisibility(View.GONE);
         txOnAir.setVisibility(View.GONE);
+        txOnAir.setText("onAir");
         txTimer.setVisibility(View.GONE);
         txCloseScreen.setVisibility(View.VISIBLE);
         returnButton.setVisibility(View.GONE);
@@ -130,7 +139,7 @@ public class CastActivity extends FlutterActivity {
                 .key(key)    // RemoteMonster로부터 받은 당신의 key를 입력하세요.
                 .build();
 
-        caster.showLocalVideo();
+//        caster.showLocalVideo();
 
         new CountDownTimer(50000000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -147,7 +156,13 @@ public class CastActivity extends FlutterActivity {
         changeCameraView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                caster.switchCamera();
+            }
+        });
+        changeCameraView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                caster.switchCamera();
             }
         });
 
@@ -156,7 +171,8 @@ public class CastActivity extends FlutterActivity {
             public void onClick(View view) {
                 // make ui changes accordingly
                 castSurfaceView.setVisibility(View.VISIBLE);
-                imageView.setVisibility(View.GONE);
+                liveBackground.setVisibility(View.GONE);
+                LiveLogoView.setVisibility(View.GONE);
                 castButton.setVisibility(View.GONE);
                 setPlayButtonsVisibility(2);
                 twLiveShopping.setVisibility(View.GONE);
@@ -171,6 +187,7 @@ public class CastActivity extends FlutterActivity {
                 //
 
                 caster.create(channelName);
+                isCast = true;
             }
         });
 
@@ -185,6 +202,7 @@ public class CastActivity extends FlutterActivity {
 
                 Button button1 = (Button) dialogView.findViewById(R.id.buttonOk);
                 Button button2 = (Button) dialogView.findViewById(R.id.buttonNo);
+                ImageView alertClose = (ImageView) dialogView.findViewById(R.id.alertClose);
 
                 builder.setView(dialogView);
                 AlertDialog alertDialog = builder.create();
@@ -196,14 +214,14 @@ public class CastActivity extends FlutterActivity {
 
                         // make ui changes accordingly
                         castSurfaceView.setVisibility(View.GONE);
-                        imageView.setVisibility(View.GONE);
+                        liveBackground.setVisibility(View.VISIBLE);
+                        LiveLogoView.setVisibility(View.GONE);
                         twLiveShopping.setVisibility(View.GONE);
                         twStreaming.setVisibility(View.GONE);
                         twStartText.setVisibility(View.GONE);
                         twStopText.setVisibility(View.VISIBLE);
                         txOnAir.setVisibility(View.GONE);
                         txTimer.setVisibility(View.GONE);
-                        imageView.setVisibility(View.GONE);
                         castButton.setVisibility(View.GONE);
                         txCloseScreen.setVisibility(View.VISIBLE);
                         playIcon.setVisibility(View.GONE);
@@ -217,9 +235,10 @@ public class CastActivity extends FlutterActivity {
                         //
 
                         caster.close();
+                        postStopRequest();
                         alertDialog.dismiss();
+                        isCast = false;
 
-//                        MethodChannel(flutterView, MainActivity.CHANNEL).invokeMethod("castStop", channelName);
                     }
                 });
                 button2.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +247,14 @@ public class CastActivity extends FlutterActivity {
                         // DO SOMETHINGS
 //                       dialogBuilder.dismiss();
                         alertDialog.dismiss();
+                        isCast = true;
+                    }
+                });
+                alertClose.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                        isCast = true;
                     }
                 });
                 alertDialog.show();
@@ -239,36 +266,48 @@ public class CastActivity extends FlutterActivity {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(CastActivity.this);
-                ViewGroup viewGroup = findViewById(android.R.id.content);
-                View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.customview, viewGroup, false);
+                if(isCast){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CastActivity.this);
+                    ViewGroup viewGroup = findViewById(android.R.id.content);
+                    View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.customview, viewGroup, false);
 
-                Button button1 = (Button) dialogView.findViewById(R.id.buttonOk);
-                Button button2 = (Button) dialogView.findViewById(R.id.buttonNo);
+                    Button button1 = (Button) dialogView.findViewById(R.id.buttonOk);
+                    Button button2 = (Button) dialogView.findViewById(R.id.buttonNo);
+                    ImageView alertClose = (ImageView) dialogView.findViewById(R.id.alertClose);
 
-                builder.setView(dialogView);
-                AlertDialog alertDialog = builder.create();
+                    builder.setView(dialogView);
+                    AlertDialog alertDialog = builder.create();
 
 
-                button1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        finish();
-                    }
-                });
-                button2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // DO SOMETHINGS
+                    button1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finish();
+                        }
+                    });
+                    button2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // DO SOMETHINGS
 //                       dialogBuilder.dismiss();
-                        alertDialog.dismiss();
-                    }
-                });
+                            alertDialog.dismiss();
+                        }
+                    });
+                    alertClose.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View view) {
+                            alertDialog.dismiss();
+                            isCast = true;
+                        }
+                    });
 
-                alertDialog.show();
-
-
+                    alertDialog.show();
+                }
+                else{
+                    finish();
+                }
             }
+
         });
 
         returnButton.setOnClickListener(new View.OnClickListener() {
@@ -284,7 +323,7 @@ public class CastActivity extends FlutterActivity {
         if(kind==1){
             playIcon.setVisibility(View.VISIBLE);
             castButton.setVisibility(View.VISIBLE);
-            changeCameraView1.setVisibility(View.GONE);
+            changeCameraView1.setVisibility(View.VISIBLE);
             stopIcon.setVisibility(View.GONE);
             stopButton.setVisibility(View.GONE);
             changeCameraView2.setVisibility(View.GONE);
@@ -295,7 +334,7 @@ public class CastActivity extends FlutterActivity {
             changeCameraView1.setVisibility(View.GONE);
             stopIcon.setVisibility(View.VISIBLE);
             stopButton.setVisibility(View.VISIBLE);
-            changeCameraView2.setVisibility(View.GONE);
+            changeCameraView2.setVisibility(View.VISIBLE);
         }
     }
 
@@ -307,5 +346,22 @@ public class CastActivity extends FlutterActivity {
         int min = (int)((passedTime / 60000) % 60);
         int sec = (int)((passedTime / 1000) % 60);
         return new int[] {hour, min, sec};
+    }
+
+    private void postStopRequest(){
+        AndroidNetworking.post("http://108.160.134.86:3000/liveEnd")
+                .addBodyParameter("liveId", liveId)
+                .addHeaders("authorization", "Bearer " + token)
+                .setTag("stopCast")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                    }
+                });
     }
 }

@@ -20,6 +20,10 @@ public class MainActivity extends FlutterActivity {
     String title = "";
     String liveDateTime = "";
     long startTime = 0;
+    String token = "";
+    String liveId = "";
+
+
 
 
     @Override
@@ -35,6 +39,9 @@ public class MainActivity extends FlutterActivity {
                         channelId = call.argument("channelId");
                         title = call.argument("title");
                         String liveTime = call.argument("liveDateTime");
+                        token = call.argument("token");
+                        liveId = call.argument("liveId");
+
                         try {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
                             Date time = dateFormat.parse(liveTime);
@@ -57,6 +64,8 @@ public class MainActivity extends FlutterActivity {
         intent.putExtra("channelId",channelId );
         intent.putExtra("title", title);
         intent.putExtra("startTime", startTime);
+        intent.putExtra("token", token);
+        intent.putExtra("liveId", liveId);
         startActivity(intent);
     }
 

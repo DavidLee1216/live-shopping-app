@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -72,10 +73,10 @@ class _HomeScreenState extends State<HomeScreen> {
           "channelId": liveItem['solutionId'],
           "title": liveItem['liveName'] + '\n' + liveItem['liveSlogan'],
           "liveDateTime": liveItem['liveDate'],
+          "token": _token,
+          "liveId": _curLiveId.toString()
         },
       );
-      if(result=='success')
-        _remoteStop();
     } on PlatformException catch (e) {
       Fluttertoast.showToast(
         msg: e.message,
@@ -380,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (!snapshot.hasData) {
+                  } else if (!snapshot.hasData || snapshot.data.length==0) {
                     return Center(
                       child: Text('예정 방송이 없습니다.'),
                     );
