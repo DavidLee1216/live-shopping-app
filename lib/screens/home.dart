@@ -246,6 +246,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<dynamic> _handleNativeMethod(MethodCall call) async {
+    switch(call.method) {
+      case "castStop":
+        debugPrint(call.arguments);
+        return _remoteStop();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -259,6 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _liveNow = _fetchLiveNow();
       _liveList = _fetchLiveList();
     });
+    platformMethodChannel.setMethodCallHandler(_handleNativeMethod);
   }
 
   @override

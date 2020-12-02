@@ -2,24 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:drawable="@drawable/stop"
-        android:width="30dp"
-        android:height="30dp"
-        android:top="10dp"
-        android:left="20dp"
-        android:right="20dp"
-        android:bottom="10dp"
+        android:drawable="@drawable/play"
+        android:width="20dp"
+        android:height="20dp"
         />
-    <item>
-        <shape
-            android:shape="rectangle">
-            <!--apply button background transparent, full opacity-->
-            <solid android:color="#00ffffff"/>
-            <!--make button border solid color, nontransparent-->
-            <stroke android:color="#ffffff" android:width="2dp"/>
-            <corners android:radius="50dp"/>
-        </shape>
-    </item>
-
-
 </layer-list >

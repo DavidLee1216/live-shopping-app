@@ -3,23 +3,7 @@
 
     <item
         android:drawable="@drawable/play"
-        android:width="30dp"
-        android:height="30dp"
-        android:top="10dp"
-        android:left="20dp"
-        android:right="20dp"
-        android:bottom="10dp"
+        android:width="50px"
+        android:height="50px"
         />
-    <item>
-        <shape
-            android:shape="rectangle">
-            <!--apply button background transparent, full opacity-->
-            <solid android:color="#00ffffff"/>
-            <!--make button border solid color, nontransparent-->
-            <stroke android:color="#ffffff" android:width="2dp"/>
-            <corners android:radius="50dp"/>
-        </shape>
-    </item>
-
-
 </layer-list >

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@android:color/black"
     >
 
     <org.webrtc.SurfaceViewRenderer
@@ -17,10 +18,8 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/live_bg"
-        android:scaleType="fitXY"
-
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_red"
         />
 
 
@@ -129,7 +128,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="50dp"
-                android:text="대만과자 커피 누가 크래커 135gx3개/비스킷 수입과자 대만과자 커피 누가 크래커 135gx…"
+                android:text="방송이 종료되었습니다. 시청해주셔서 감사합니다."
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
@@ -138,27 +137,27 @@
                 />
 
 
-            <TextView
-                android:id="@+id/liveWarningText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="top"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="50dp"
-                android:text="5분 남았습니다."
-                android:textAlignment="center"
-                android:textColor="#ff5570"
-                android:textFontWeight="700"
-                android:textSize="20sp"
-                tools:ignore="RtlCompat"
-                android:background="@drawable/warning_bg"
+<!--            <TextView-->
+<!--                android:id="@+id/liveWarningText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_gravity="top"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginTop="0dp"-->
+<!--                android:layout_marginRight="10dp"-->
+<!--                android:layout_marginBottom="50dp"-->
+<!--                android:text="5분 남았습니다."-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="#ff5570"-->
+<!--                android:textFontWeight="700"-->
+<!--                android:textSize="20sp"-->
+<!--                tools:ignore="RtlCompat"-->
+<!--                android:background="@drawable/warning_bg"-->
 
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                />
+<!--                android:paddingTop="10dp"-->
+<!--                android:paddingBottom="10dp"-->
+<!--                />-->
 
         </LinearLayout>
 
@@ -194,88 +193,98 @@
             tools:ignore="RtlCompat"
             />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical">
+            android:layout_height="wrap_content">
 
-<!--            <Button-->
-<!--                android:id="@+id/castButton"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:padding="10dp"-->
-<!--                android:text="방송 시작"-->
-<!--                android:background="@drawable/button_bg_transparent"-->
-<!--                />-->
-
+            <ImageView
+                android:id="@+id/play_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignLeft="@id/castButton"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/play"
+                />
 
             <TextView
                 android:id="@+id/castButton"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_bg_transparent"
+                android:paddingHorizontal="30dp"
+                android:paddingVertical="10dp"
+                android:paddingRight="30dp"
                 android:text="방송 시작"
-                android:textAlignment="center"
+                android:textAlignment="textEnd"
+                android:gravity="center"
                 android:textColor="#FFFFFF"
                 android:textFontWeight="900"
-                android:textSize="20sp"
-                tools:ignore="RtlCompat"
-                android:background="@drawable/play_button"
-                android:gravity="center"
+                android:textSize="20dp"
+                tools:ignore="RtlCompat" />
 
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-
-
+            <ImageView
+                android:id="@+id/stop_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignLeft="@id/stopButton"
+                android:layout_marginLeft="30dp"
+                android:src="@drawable/stop"
                 />
-<!--                android:drawableLeft="@drawable/play"-->
-<!--                android:drawablePadding="20dp"-->
-
-<!--            <Button-->
-<!--                android:id="@+id/stopButton"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/castButton"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:padding="15dp"-->
-<!--                android:text="방송 종료"-->
-<!--                android:background="@drawable/button_bg_transparent"-->
-
-<!--                />-->
-
-
             <TextView
                 android:id="@+id/stopButton"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_bg_transparent"
+                android:paddingHorizontal="30dp"
+                android:paddingVertical="10dp"
+                android:paddingRight="30dp"
                 android:text="방송 종료"
-                android:textAlignment="center"
+                android:textAlignment="textEnd"
+                android:gravity="center"
                 android:textColor="#FFFFFF"
                 android:textFontWeight="900"
                 android:textSize="20sp"
-                tools:ignore="RtlCompat"
-                android:background="@drawable/stop_button"
-                android:gravity="center"
+                tools:ignore="RtlCompat" />
 
+<!--            <TextView-->
+<!--                android:id="@+id/stopButton"-->
+<!--                android:layout_width="200dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:background="@drawable/button_bg_transparent"-->
+<!--                android:paddingHorizontal="30dp"-->
+<!--                android:paddingVertical="10dp"-->
+<!--                android:paddingRight="30dp"-->
+<!--                android:text="돌아 가기"-->
+<!--                android:textAlignment="textEnd"-->
+<!--                android:gravity="center"-->
+<!--                android:textColor="#FFFFFF"-->
+<!--                android:textFontWeight="900"-->
+<!--                android:textSize="20sp"-->
+<!--                tools:ignore="RtlCompat" />-->
 
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-
-                />
-
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/cameraChangeButton1"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/castButton"
+                android:src="@drawable/camerachange" />
+            <ImageView
+                android:id="@+id/cameraChangeButton2"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/stopButton"
+                android:src="@drawable/camerachange" />
+        </RelativeLayout>
 
     </LinearLayout>
 
