@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -66,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _remoteCast(dynamic liveItem) async {
     try {
-      await platformMethodChannel.invokeMethod(
+      String result = await platformMethodChannel.invokeMethod(
         'startStreaming',
         {
           "channelId": liveItem['solutionId'],
@@ -74,6 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
           "liveDateTime": liveItem['liveDate'],
         },
       );
+      if(result=='success')
+        _remoteStop();
     } on PlatformException catch (e) {
       Fluttertoast.showToast(
         msg: e.message,

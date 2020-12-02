@@ -36,7 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import android.util.Log;
 import android.os.CountDownTimer;
-public class CastActivity extends AppCompatActivity {
+public class CastActivity extends FlutterActivity {
 
     //    private RemonCast castViewer = null;
     String channelName ="";
@@ -219,8 +219,7 @@ public class CastActivity extends AppCompatActivity {
                         caster.close();
                         alertDialog.dismiss();
 
-//                        MethodChannel channel = MethodChannel(, MainActivity.CHANNEL);
-//                        channel.invokeMethod("castStop", channelName);
+//                        MethodChannel(flutterView, MainActivity.CHANNEL).invokeMethod("castStop", channelName);
                     }
                 });
                 button2.setOnClickListener(new View.OnClickListener() {
@@ -231,12 +230,7 @@ public class CastActivity extends AppCompatActivity {
                         alertDialog.dismiss();
                     }
                 });
-
-
-
                 alertDialog.show();
-
-
             }
         });
 

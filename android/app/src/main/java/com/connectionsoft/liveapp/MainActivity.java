@@ -44,9 +44,7 @@ public class MainActivity extends FlutterActivity {
                             startTime = currentTime.getTime();
                         }
                         runCode();
-                        result.success("Code runs");
-                        Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(this, channelId, Toast.LENGTH_SHORT).show();
+                        result.success("success");
                     }
                 });
     }
@@ -54,8 +52,6 @@ public class MainActivity extends FlutterActivity {
 
 
     public void runCode() {
-
-        Toast.makeText(this, "Activity is being opened", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getApplicationContext(),CastActivity.class);//Start your special native stuff
         intent.putExtra("channelId",channelId );
