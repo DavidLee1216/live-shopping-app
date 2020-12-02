@@ -172,7 +172,7 @@
             android:layout_marginBottom="50dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="아래 버튼을 누르시면 라이브 방송이 시작됩니다. 시작을 원하신다면 버튼을 눌러주세요."
+            android:text="아래 버튼을 누르시면 라이브 방송이 시작됩니다.\n 시작을 원하신다면 버튼을 눌러주세요."
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
@@ -186,7 +186,7 @@
             android:layout_gravity="top"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="50dp"
-            android:text=""
+            android:text="방송이 종료되었습니다.\n 시청해주셔서 감사합니다."
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
@@ -252,23 +252,22 @@
                 android:textSize="20sp"
                 tools:ignore="RtlCompat" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/stopButton"-->
-<!--                android:layout_width="200dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:background="@drawable/button_bg_transparent"-->
-<!--                android:paddingHorizontal="30dp"-->
-<!--                android:paddingVertical="10dp"-->
-<!--                android:paddingRight="30dp"-->
-<!--                android:text="돌아 가기"-->
-<!--                android:textAlignment="textEnd"-->
-<!--                android:gravity="center"-->
-<!--                android:textColor="#FFFFFF"-->
-<!--                android:textFontWeight="900"-->
-<!--                android:textSize="20sp"-->
-<!--                tools:ignore="RtlCompat" />-->
+            <Button
+                android:id="@+id/returnButton"
+                android:layout_width="300dp"
+                android:layout_height="70dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:paddingHorizontal="30dp"
+                android:paddingVertical="10dp"
+                android:text="돌아 가기"
+                android:background="#FFFFFF"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textFontWeight="900"
+                android:textSize="20sp"
+                tools:ignore="RtlCompat" />
 
             <ImageView
                 android:id="@+id/cameraChangeButton1"

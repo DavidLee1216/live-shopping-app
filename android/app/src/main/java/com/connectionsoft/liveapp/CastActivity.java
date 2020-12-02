@@ -56,6 +56,7 @@ public class CastActivity extends AppCompatActivity {
     SurfaceViewRenderer castSurfaceView;
     ImageView playIcon;
     TextView castButton;
+    Button returnButton;
     ImageView stopIcon;
     TextView stopButton;
     ImageView changeCameraView1;
@@ -90,6 +91,7 @@ public class CastActivity extends AppCompatActivity {
         changeCameraView1 = findViewById(R.id.cameraChangeButton1);
         stopIcon = findViewById(R.id.stop_button);
         stopButton = findViewById(R.id.stopButton);
+        returnButton = findViewById(R.id.returnButton);
         changeCameraView2 = findViewById(R.id.cameraChangeButton2);
 
         castSurfaceView = findViewById(R.id.local_video_view);
@@ -118,6 +120,7 @@ public class CastActivity extends AppCompatActivity {
         txOnAir.setVisibility(View.GONE);
         txTimer.setVisibility(View.GONE);
         txCloseScreen.setVisibility(View.VISIBLE);
+        returnButton.setVisibility(View.GONE);
 //        txLiveWarningText.setVisibility(View.GONE);
 
         caster = RemonCast.builder()
@@ -163,6 +166,7 @@ public class CastActivity extends AppCompatActivity {
                 txOnAir.setVisibility(View.VISIBLE);
                 txTimer.setVisibility(View.VISIBLE);
                 txCloseScreen.setVisibility(View.GONE);
+                returnButton.setVisibility(View.GONE);
 //                txLiveWarningText.setVisibility(View.VISIBLE);
                 //
 
@@ -193,7 +197,6 @@ public class CastActivity extends AppCompatActivity {
                         // make ui changes accordingly
                         castSurfaceView.setVisibility(View.GONE);
                         imageView.setVisibility(View.GONE);
-                        setPlayButtonsVisibility(1);
                         twLiveShopping.setVisibility(View.GONE);
                         twStreaming.setVisibility(View.GONE);
                         twStartText.setVisibility(View.GONE);
@@ -209,6 +212,7 @@ public class CastActivity extends AppCompatActivity {
                         stopIcon.setVisibility(View.GONE);
                         stopButton.setVisibility(View.GONE);
                         changeCameraView2.setVisibility(View.GONE);
+                        returnButton.setVisibility(View.VISIBLE);
 //                        txLiveWarningText.setVisibility(View.GONE);
                         //
 
@@ -273,6 +277,12 @@ public class CastActivity extends AppCompatActivity {
             }
         });
 
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
     }
 
