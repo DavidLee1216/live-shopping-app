@@ -247,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<dynamic> _handleNativeMethod(MethodCall call) async {
-    switch(call.method) {
+    switch (call.method) {
       case "castStop":
         debugPrint(call.arguments);
         return _remoteStop();
@@ -271,6 +271,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    if (_timer == null) {
+      _startTimer();
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     _timer.cancel();
     super.dispose();
@@ -278,6 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _startTimer();
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: Padding(
@@ -398,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       '${liveDateTime.year}년 ${liveDateTime.month}월 ${liveDateTime.day}일\n${liveDateTime.hour}시 ${liveDateTime.minute}분 방송시작';
 
                   _activeTime = liveItem['activeTime'];
-                  _liveDate = liveDateTime;
+                  _liveDate = liveDateTime.toLocal();
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
