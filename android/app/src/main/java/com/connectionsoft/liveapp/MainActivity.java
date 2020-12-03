@@ -36,7 +36,7 @@ public class MainActivity extends FlutterActivity {
 
                     if (call.method.equals("startStreaming")) {
 
-                        channelId = call.argument("channelId");
+//                        channelId = call.argument("channelId");
                         title = call.argument("title");
                         String liveTime = call.argument("liveDateTime");
                         token = call.argument("token");

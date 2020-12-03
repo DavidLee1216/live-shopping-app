@@ -88,7 +88,7 @@ public class CastActivity extends AppCompatActivity {
 
         AndroidNetworking.initialize(getApplicationContext());
 
-        channelName = getIntent().getExtras().getString("channelId");
+//        channelName = getIntent().getExtras().getString("channelId");
         title = getIntent().getExtras().getString("title");
         startTime = getIntent().getExtras().getLong("startTime");
         token = getIntent().getExtras().getString("token");
@@ -132,6 +132,8 @@ public class CastActivity extends AppCompatActivity {
         returnButton.setVisibility(View.GONE);
 //        txLiveWarningText.setVisibility(View.GONE);
 
+        channelName = GenerateRandomString.randomString(10);
+
         caster = RemonCast.builder()
                 .context(CastActivity.this)
                 .localView(castSurfaceView)        // 자신 Video Renderer
@@ -141,6 +143,10 @@ public class CastActivity extends AppCompatActivity {
 
         caster.setMicMute(false);
 //        caster.showLocalVideo();
+
+        caster.onCreate((channelName) -> {
+            postStartRequest(channelName);
+        });
 
         new CountDownTimer(50000000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -368,4 +374,40 @@ public class CastActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void postStartRequest(String channelName){
+        AndroidNetworking.post("http://108.160.134.86:3000/liveStart")
+                .addBodyParameter("liveId", liveId)
+                .addBodyParameter("solutionId", channelName)
+                .addHeaders("authorization", "Bearer " + token)
+                .setTag("startCast")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_SHORT).show();                    }
+                });
+    }
+
+    public static class GenerateRandomString {
+
+        public static final String DATA = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        public static Random RANDOM = new Random();
+
+        public static String randomString(int len) {
+            StringBuilder sb = new StringBuilder(len);
+
+            for (int i = 0; i < len; i++) {
+                sb.append(DATA.charAt(RANDOM.nextInt(DATA.length())));
+            }
+
+            return sb.toString();
+        }
+
+    }
+
 }

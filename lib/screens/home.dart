@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       String result = await platformMethodChannel.invokeMethod(
         'startStreaming',
         {
-          "channelId": liveItem['solutionId'],
+//          "channelId": liveItem['solutionId'],
           "title": liveItem['liveName'] + '\n' + liveItem['liveSlogan'],
           "liveDateTime": liveItem['liveDate'],
           "token": _token,
@@ -101,27 +101,27 @@ class _HomeScreenState extends State<HomeScreen> {
         throw Exception('카메라, 마이크, 저장공간 권한을 허용해주세요.');
       }
 
-      liveItem['solutionId'] = randomAlphaNumeric(10);
-
-      final response = await http.post(
-        '$apiHost/liveStart',
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
-        body: {
-          'liveId': liveItem['liveId'].toString(),
-          'solutionId': liveItem['solutionId']
-        },
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('리스트를 가져오지 못했습니다.');
-      }
-
-      final payload = json.decode(response.body)['payload'];
+//      liveItem['solutionId'] = randomAlphaNumeric(10);
+//
+//      final response = await http.post(
+//        '$apiHost/liveStart',
+//        headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
+//        body: {
+//          'liveId': liveItem['liveId'].toString(),
+//          'solutionId': liveItem['solutionId']
+//        },
+//      );
+//
+//      if (response.statusCode != 200) {
+//        throw Exception('리스트를 가져오지 못했습니다.');
+//      }
+//
+//      final payload = json.decode(response.body)['payload'];
 
       _curLiveId = liveItem['liveId'];
       _remoteCast(liveItem);
 
-      return payload;
+      return null;
     } catch (e) {
       Fluttertoast.showToast(
         msg: e.message,
