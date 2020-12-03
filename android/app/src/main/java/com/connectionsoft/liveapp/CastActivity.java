@@ -137,7 +137,6 @@ public class CastActivity extends AppCompatActivity {
                 .localView(castSurfaceView)        // 자신 Video Renderer
                 .serviceId(serviceKey)    // RemoteMonster 사이트에서 등록했던 당신의 id를 입력하세요.
                 .key(key)    // RemoteMonster로부터 받은 당신의 key를 입력하세요.
-                .showLocalVideo()
                 .build();
 
         caster.setMicMute(false);
