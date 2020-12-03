@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _activeTime;
   DateTime _liveDate;
   bool canStartStreaming = false;
-  int _curLiveId;
 
   static const platformMethodChannel =
       const MethodChannel('com.connectionsoft.liveapp/cast');
@@ -66,15 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _remoteCast(dynamic liveItem) async {
+    print({
+      "title": liveItem['liveName'] + '\n' + liveItem['liveSlogan'],
+      "liveDateTime": liveItem['liveDate'],
+      "token": _token,
+      "liveId": liveItem['liveId'].toString()
+    });
     try {
-      String result = await platformMethodChannel.invokeMethod(
+      await platformMethodChannel.invokeMethod(
         'startStreaming',
         {
-//          "channelId": liveItem['solutionId'],
           "title": liveItem['liveName'] + '\n' + liveItem['liveSlogan'],
           "liveDateTime": liveItem['liveDate'],
           "token": _token,
-          "liveId": _curLiveId.toString()
+          "liveId": liveItem['liveId'].toString()
         },
       );
     } on PlatformException catch (e) {
@@ -90,8 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<List<dynamic>> _startStreaming(
-      BuildContext context, dynamic liveItem) async {
+  Future<void> _startStreaming(BuildContext context, dynamic liveItem) async {
     try {
       final permissionGranted = await Permission.camera.request().isGranted &&
           await Permission.microphone.request().isGranted &&
@@ -101,27 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
         throw Exception('카메라, 마이크, 저장공간 권한을 허용해주세요.');
       }
 
-//      liveItem['solutionId'] = randomAlphaNumeric(10);
-//
-//      final response = await http.post(
-//        '$apiHost/liveStart',
-//        headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
-//        body: {
-//          'liveId': liveItem['liveId'].toString(),
-//          'solutionId': liveItem['solutionId']
-//        },
-//      );
-//
-//      if (response.statusCode != 200) {
-//        throw Exception('리스트를 가져오지 못했습니다.');
-//      }
-//
-//      final payload = json.decode(response.body)['payload'];
-
-      _curLiveId = liveItem['liveId'];
       _remoteCast(liveItem);
-
-      return null;
     } catch (e) {
       Fluttertoast.showToast(
         msg: e.message,
@@ -132,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      return null;
     }
   }
 

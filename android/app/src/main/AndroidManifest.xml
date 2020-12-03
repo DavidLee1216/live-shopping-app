@@ -21,7 +21,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="라이브쇼핑"
         android:icon="@mipmap/launcher_icon"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".CastActivity"
             android:theme="@style/AppTheme.NoActionBar"

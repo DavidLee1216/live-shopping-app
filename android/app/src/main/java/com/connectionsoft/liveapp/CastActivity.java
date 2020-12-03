@@ -371,6 +371,7 @@ public class CastActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onError(ANError error) {
+                        Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -389,7 +390,8 @@ public class CastActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onError(ANError error) {
-                        Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_SHORT).show();                    }
+                        Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
