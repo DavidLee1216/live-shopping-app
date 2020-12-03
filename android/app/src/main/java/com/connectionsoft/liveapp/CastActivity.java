@@ -139,7 +139,8 @@ public class CastActivity extends AppCompatActivity {
                 .key(key)    // RemoteMonster로부터 받은 당신의 key를 입력하세요.
                 .build();
 
-        caster.showLocalVideo();
+        caster.setMicMute(false);
+//        caster.showLocalVideo();
 
         new CountDownTimer(50000000, 1000) {
             public void onTick(long millisUntilFinished) {
