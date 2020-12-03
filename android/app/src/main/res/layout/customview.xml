@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,21 +8,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-        <TextView
+        android:padding="20dp">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-        <TextView
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:id="@+id/alertClose"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                app:srcCompat="@drawable/close_icon" />
+        </RelativeLayout>
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="정말로 방송을 종료하시겠습니까?"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
+            android:layout_height="140dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="16sp"
+                android:textColor="#707070"
+                android:letterSpacing="-0.01"
+                android:lineSpacingExtra="9sp"
+                android:gravity="center"
+                android:paddingTop="50dp"
+                android:fontFamily="@font/nanum_square"
+                android:text="정말로 방송을\n종료하시겠습니까?"
+                />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,26 +49,33 @@
             <Button
                 android:id="@+id/buttonOk"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="#FFFFFF"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/grey_box"
+                android:fontFamily="@font/nanum_square"
                 android:text="예"
-                android:textColor="#FFF" />
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:textColor="#707070"
+                android:layout_weight="1"
+                />
 
 
             <Button
                 android:id="@+id/buttonNo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:background="#FFFFFF"
+                android:background="@drawable/pink_box"
+                android:fontFamily="@font/nanum_square"
                 android:text="아니요"
-                android:textColor="#FFF" />
-
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_weight="1"
+                />
         </LinearLayout>
-
-
     </LinearLayout>
 </LinearLayout>

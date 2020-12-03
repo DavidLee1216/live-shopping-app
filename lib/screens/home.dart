@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -66,12 +67,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _remoteCast(dynamic liveItem) async {
     try {
-      await platformMethodChannel.invokeMethod(
+      String result = await platformMethodChannel.invokeMethod(
         'startStreaming',
         {
           "channelId": liveItem['solutionId'],
           "title": liveItem['liveName'] + '\n' + liveItem['liveSlogan'],
           "liveDateTime": liveItem['liveDate'],
+          "token": _token,
+          "liveId": _curLiveId.toString()
         },
       );
     } on PlatformException catch (e) {
@@ -387,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (!snapshot.hasData) {
+                  } else if (!snapshot.hasData || snapshot.data.length==0) {
                     return Center(
                       child: Text('예정 방송이 없습니다.'),
                     );

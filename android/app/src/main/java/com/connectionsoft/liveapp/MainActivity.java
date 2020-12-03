@@ -20,6 +20,10 @@ public class MainActivity extends FlutterActivity {
     String title = "";
     String liveDateTime = "";
     long startTime = 0;
+    String token = "";
+    String liveId = "";
+
+
 
 
     @Override
@@ -35,6 +39,9 @@ public class MainActivity extends FlutterActivity {
                         channelId = call.argument("channelId");
                         title = call.argument("title");
                         String liveTime = call.argument("liveDateTime");
+                        token = call.argument("token");
+                        liveId = call.argument("liveId");
+
                         try {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
                             Date time = dateFormat.parse(liveTime);
@@ -44,9 +51,7 @@ public class MainActivity extends FlutterActivity {
                             startTime = currentTime.getTime();
                         }
                         runCode();
-                        result.success("Code runs");
-                        Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(this, channelId, Toast.LENGTH_SHORT).show();
+                        result.success("success");
                     }
                 });
     }
@@ -55,12 +60,12 @@ public class MainActivity extends FlutterActivity {
 
     public void runCode() {
 
-        Toast.makeText(this, "Activity is being opened", Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(getApplicationContext(),CastActivity.class);//Start your special native stuff
         intent.putExtra("channelId",channelId );
         intent.putExtra("title", title);
         intent.putExtra("startTime", startTime);
+        intent.putExtra("token", token);
+        intent.putExtra("liveId", liveId);
         startActivity(intent);
     }
 
