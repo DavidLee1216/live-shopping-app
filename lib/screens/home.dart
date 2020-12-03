@@ -90,28 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _remoteStop() async {
-    try {
-      await http.post(
-        '$apiHost/liveEnd',
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
-        body: {
-          'liveId': _curLiveId.toString(),
-        },
-      );
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg: '네트워크가 불안정합니다.',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.redAccent,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-  }
-
   Future<List<dynamic>> _startStreaming(
       BuildContext context, dynamic liveItem) async {
     try {
@@ -249,14 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<dynamic> _handleNativeMethod(MethodCall call) async {
-    switch(call.method) {
-      case "castStop":
-        debugPrint(call.arguments);
-        return _remoteStop();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -270,7 +240,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _liveNow = _fetchLiveNow();
       _liveList = _fetchLiveList();
     });
-    platformMethodChannel.setMethodCallHandler(_handleNativeMethod);
   }
 
   @override
@@ -381,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (!snapshot.hasData || snapshot.data.length==0) {
+                  } else if (!snapshot.hasData || snapshot.data.length == 0) {
                     return Center(
                       child: Text('예정 방송이 없습니다.'),
                     );
