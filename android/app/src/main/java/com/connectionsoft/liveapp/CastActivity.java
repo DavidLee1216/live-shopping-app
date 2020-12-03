@@ -126,7 +126,7 @@ public class CastActivity extends AppCompatActivity {
         twStartText.setVisibility(View.VISIBLE);
         twStopText.setVisibility(View.GONE);
         txOnAir.setVisibility(View.GONE);
-        txOnAir.setText("onAir");
+        txOnAir.setText("On Air");
         txTimer.setVisibility(View.GONE);
         txCloseScreen.setVisibility(View.VISIBLE);
         returnButton.setVisibility(View.GONE);
