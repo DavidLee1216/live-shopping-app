@@ -141,7 +141,7 @@ public class CastActivity extends AppCompatActivity {
                 .build();
 
         caster.setMicMute(false);
-        // caster.showLocalVideo();
+//        caster.showLocalVideo();
 
         new CountDownTimer(50000000, 1000) {
             public void onTick(long millisUntilFinished) {
