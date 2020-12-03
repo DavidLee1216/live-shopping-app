@@ -185,10 +185,13 @@ public class CastActivity extends AppCompatActivity {
                 txCloseScreen.setVisibility(View.GONE);
                 returnButton.setVisibility(View.GONE);
 //                txLiveWarningText.setVisibility(View.VISIBLE);
-                //
 
-                caster.create(channelName);
-                isCast = true;
+                try {
+                    caster.create(channelName);
+                    isCast = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
