@@ -126,7 +126,7 @@ public class CastActivity extends AppCompatActivity {
         twStartText.setVisibility(View.VISIBLE);
         twStopText.setVisibility(View.GONE);
         txOnAir.setVisibility(View.GONE);
-        txOnAir.setText("onAir");
+        txOnAir.setText("On Air");
         txTimer.setVisibility(View.GONE);
         txCloseScreen.setVisibility(View.VISIBLE);
         returnButton.setVisibility(View.GONE);
@@ -137,9 +137,11 @@ public class CastActivity extends AppCompatActivity {
                 .localView(castSurfaceView)        // 자신 Video Renderer
                 .serviceId(serviceKey)    // RemoteMonster 사이트에서 등록했던 당신의 id를 입력하세요.
                 .key(key)    // RemoteMonster로부터 받은 당신의 key를 입력하세요.
+                .showLocalVideo()
                 .build();
 
-        caster.showLocalVideo();
+        caster.setMicMute(false);
+        // caster.showLocalVideo();
 
         new CountDownTimer(50000000, 1000) {
             public void onTick(long millisUntilFinished) {
