@@ -101,17 +101,12 @@ class _HomeScreenState extends State<HomeScreen> {
         throw Exception('카메라, 마이크, 저장공간 권한을 허용해주세요.');
       }
 
-      if (liveItem['solutionId'].isEmpty) {
-        final genearetedId = randomAlphaNumeric(10);
-        liveItem['solutionId'] = 'com.connectionsoft.liveapp/$genearetedId';
-      }
-
       final response = await http.post(
         '$apiHost/liveStart',
         headers: {HttpHeaders.authorizationHeader: 'Bearer $_token'},
         body: {
           'liveId': liveItem['liveId'].toString(),
-          'solutionId': liveItem['solutionId']
+          'solutionId': randomAlphaNumeric(10)
         },
       );
 
